@@ -1,5 +1,8 @@
+// prisma/schema.prisma
+
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -19,5 +22,5 @@ model Snack {
   imageUrl  String?  @map("image_url")
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @updatedAt      @map("updated_at")
 }
