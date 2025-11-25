@@ -31,7 +31,7 @@ export default function RatingStars({ snackId, initialRating }: RatingStarsProps
 
         const updated = await res.json();
         setRating(updated.rating ?? null);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(err);
         setError("Error saving rating");
         // rollback by refetching value from server could be added later
