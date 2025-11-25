@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import SnackGallery from "@/components/SnackGallery";
+import SnackGalleryWithSearch from "@/components/SnackGalleryWithSearch";
 
 export default async function HomePage() {
   const snacks = await prisma.snack.findMany({
@@ -25,7 +25,7 @@ export default async function HomePage() {
         </Link>
       </header>
 
-      <SnackGallery snacks={snacks} />
+      <SnackGalleryWithSearch snacks={snacks} />
     </main>
   );
 }
