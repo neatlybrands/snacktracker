@@ -1,11 +1,12 @@
 import type { Snack } from "@prisma/client";
+import RatingStars from "./RatingStars";
 
 type SnackCardProps = {
   snack: Snack;
 };
 
 export default function SnackCard({ snack }: SnackCardProps) {
-  const { name, brand, flavor, rating, price, store, imageUrl } = snack;
+  const { id, name, brand, flavor, rating, price, store, imageUrl } = snack;
 
   return (
     <article className="border rounded-lg p-3 flex flex-col justify-between bg-white shadow-sm">
@@ -43,18 +44,9 @@ export default function SnackCard({ snack }: SnackCardProps) {
         )}
       </div>
 
-      {/* Footer row */}
+      {/* Footer with rating controls */}
       <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
-        <span>
-          {rating ? (
-            <>
-              ⭐ <span className="font-medium">{rating}</span>/3
-            </>
-          ) : (
-            "Not rated"
-          )}
-        </span>
-        {/* detail / actions will go here later */}
+        <RatingStars snackId={id} initialRating={rating} />
       </div>
     </article>
   );
