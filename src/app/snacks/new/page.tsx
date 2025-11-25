@@ -52,9 +52,10 @@ export default function NewSnackPage() {
 
       router.push("/");
       router.refresh();
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setError(err.message ?? "Something went wrong");
+      const message = err instanceof Error ? err.message : "Something went wrong";
+      setError(message);
     } finally {
       setIsSubmitting(false);
     }
