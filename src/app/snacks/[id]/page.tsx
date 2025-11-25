@@ -3,13 +3,20 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import RatingStars from "@/components/RatingStars";
 
-type SnackDetailPageProps = {
-  params: { id: string };
+type SnackParams = {
+  id: string;
 };
 
-export default async function SnackDetailPage({ params }: SnackDetailPageProps) {
+export default async function SnackDetailPage({
+  params,
+}: {
+  params: Promise<SnackParams>;
+}) {
+  // 👇 Next 16: params is a Promise, so we await it
+  const { id } = await params;
+
   const snack = await prisma.snack.findUnique({
-    where: { id: params.id },
+    where: { id },
   });
 
   if (!snack) {
