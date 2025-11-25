@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 type RouteParams = {
   params: { id: string };
@@ -24,31 +24,27 @@ export async function GET(_req: Request, { params }: RouteParams) {
 }
 
 // PATCH to update fields (for now, rating)
-export async function PATCH(request: Request, { params }: RouteParams) {
+export async function PATCH(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const body = await request.json();
-    const { rating } = body ?? {};
+    const { id } = await context.params; // ✅ IMPORTANT: must await this
+    const body = await req.json();
+    const rating = Number(body.rating);
 
-    let data: { rating?: number | null } = {};
-
-    if (rating === null) {
-      data.rating = null;
-    } else if (rating !== undefined) {
-      const r = Number(rating);
-      if (![1, 2, 3].includes(r)) {
-        return new NextResponse("Rating must be 1, 2, or 3", { status: 400 });
-      }
-      data.rating = r;
+    if (!id || Number.isNaN(rating) || rating < 1 || rating > 3) {
+      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
     const snack = await prisma.snack.update({
-      where: { id: params.id },
-      data,
+      where: { id },
+      data: { rating },
     });
 
     return NextResponse.json(snack);
-  } catch (error) {
-    console.error("Error updating snack:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+  } catch (err) {
+    console.error("Error updating snack:", err);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
